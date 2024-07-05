@@ -1,0 +1,30 @@
+version: '2.4'
+
+services:
+
+  rangelmarco:
+    image: nginx:1.17.9-alpine
+    restart: unless-stopped
+    labels:
+      - "traefik.http.routers.rangelmarco.rule=Host(`rangelmarco.com`,`www.rangelmarco.com`)"
+      - "traefik.http.routers.rangelmarco.entrypoints=websecure"
+      - "traefik.http.routers.rangelmarco.tls"
+      - "traefik.http.routers.rangelmarco.tls.certresolver=myresolver"
+      # no-www
+      - "traefik.http.routers.rangelmarco.middlewares=rangelmarcow"
+      - "traefik.http.middlewares.rangelmarcow.redirectregex.regex=^https://www.rangelmarco.com/(.*)"
+      - "traefik.http.middlewares.rangelmarcow.redirectregex.replacement=https://rangelmarco.com/$${1}"
+      - "traefik.http.middlewares.rangelmarcow.redirectregex.permanent=true"
+      # Salud del sitio
+      #- "traefik.http.services.rangelmarco.loadBalancer.healthCheck.path=/"
+      #- "traefik.http.services.rangelmarco.loadBalancer.healthCheck.interval=30s"
+      #- "traefik.http.services.rangelmarco.loadBalancer.healthCheck.timeout=5s"
+    volumes:
+      - ./web:/usr/share/nginx/html
+    mem_limit: 256m
+    cpus: 1
+
+networks:
+  default:
+    external:
+      name: netraefik
