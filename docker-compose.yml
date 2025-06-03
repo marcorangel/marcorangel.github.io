@@ -1,9 +1,11 @@
 version: '3'
 
 services:
-
   rangelmarco:
     image: nginx:1.17.9-alpine
+    build:
+      context: . 
+      dockerfile: Dockerfile
     restart: unless-stopped
     ports:
       - 0:80
