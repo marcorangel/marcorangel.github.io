@@ -5,5 +5,7 @@ services:
   rangelmarco:
     image: nginx:1.17.9-alpine
     restart: unless-stopped
+    ports:
+      - 0:80
     labels:
       - "traefik.http.routers.rangelmarco.rule=Host(`rangelmarco.traefik.me`)"
